@@ -1,6 +1,6 @@
 import java.util.Scanner;
 import java.util.Collections;
-import java.lang.Exception;
+import java.util.regex.Pattern;
 
 class ConvertNum {
     public static void main (String[] args) {
@@ -40,22 +40,33 @@ class ConvertNum {
     static int convertToDec (Scanner scan, String msg, int from, int to) {
         int decequiv=0;
         System.out.print(msg);
-        String conv=scan.next().toLowerCase();
-        String[] splitconv=conv.split("");
-        int[] revconv = new int[splitconv.length-1];
-        int j=0;
-        for (int i=splitconv.length-1;0<i;i--) {
-            int k=0;
-            try {
-                k = Integer.parseInt(splitconv[i]);
-            } catch (Exception e) {
-                k = (int)(splitconv[i].charAt(0)) - 87;
+        boolean invalid=true;
+        while (invalid) {        
+            String conv=scan.next().toLowerCase();
+            String[] splitconv=conv.split("");
+            int[] revconv = new int[splitconv.length-1];
+            int j=0;
+            for (int i=splitconv.length-1;0<i;i--) {
+                int k=0;
+                try {
+                    k = Integer.parseInt(splitconv[i]);
+                } catch (Exception e) {
+                    k = (int)(splitconv[i].charAt(0)) - 87;
+                }
+                revconv[j] = k;
+                j++;
+                if (revconv[j] > from) {
+                    invalid=true;
+                    break;
+                } else {
+                    invalid=false;
+                }
             }
-            revconv[j] = k;
-            j++;
-        }
-        for (int i=0;i<revconv.length;i++) {
-            decequiv = decequiv + revconv[i]*(int)Math.pow(from,i);
+            if (!invalid) {
+                for (int i=0;i<revconv.length;i++) {
+                    decequiv = decequiv + revconv[i]*(int)Math.pow(from,i);
+                }
+            }
         }
         return decequiv;
     }
