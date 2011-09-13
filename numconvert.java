@@ -1,16 +1,14 @@
 import java.util.Scanner;
 import java.util.Collections;
+import java.lang.Exception;
 
 class ConvertNum {
     public static void main (String[] args) {
         Scanner scan = new Scanner(System.in);
-        System.out.print("Convert from base: ");
-        int from=scan.nextInt();
-        System.out.print("Convert to base: ");
-        int to=scan.nextInt();
+	int from = ConvertNum.getInt(scan, "Convert from base: ");
+        int to=ConvertNum.getInt(scan, "Convert to base: ");
         System.out.print("Number to convert: ");
         String conv=scan.next();
-        //        Pattern splitpatt = Pattern.compile(".");
         String[] splitconv=conv.split("");
         System.out.print(Integer.toString(from) + "," + Integer.toString(to) + ",");
         String[] revconv = new String[splitconv.length-1];
@@ -29,5 +27,20 @@ class ConvertNum {
             decequiv /= to;
         }
         System.out.println(realequiv);
+    }
+
+    static int getInt (Scanner scan, String msg) {
+	int genericInteger=0;
+	int except=1;
+	while (except == 1) {
+	    try {
+		System.out.print(msg);
+		genericInteger=Integer.parseInt(scan.next());
+		except=0;
+	    } catch (Exception e) { 
+		//stuff
+	    }
+	}
+	return genericInteger;
     }
 }
