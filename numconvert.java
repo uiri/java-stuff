@@ -5,25 +5,18 @@ import java.lang.Exception;
 class ConvertNum {
     public static void main (String[] args) {
         Scanner scan = new Scanner(System.in);
+        System.out.println("The hard limit is base 36. You run into weird ascii territory beyond that");
 	int from = ConvertNum.getInt(scan, "Convert from base: ");
         int to=ConvertNum.getInt(scan, "Convert to base: ");
-        System.out.print("Number to convert: ");
-        String conv=scan.next();
-        String[] splitconv=conv.split("");
-        System.out.print(Integer.toString(from) + "," + Integer.toString(to) + ",");
-        String[] revconv = new String[splitconv.length-1];
-        int j=0;
-        for (int i=splitconv.length-1;0<i;i--) {
-            revconv[j] = splitconv[i];
-            j++;
-        }
-        int decequiv=0;
+        int decequiv=ConvertNum.convertToDec(scan, "Number to convert: ", from, to);
         String realequiv="";
-        for (int i=0;i<revconv.length;i++) {
-            decequiv = decequiv + Integer.parseInt(revconv[i])*(int)Math.pow(from,i);
-        }
         while (decequiv != 0) {
-            realequiv = Integer.toString(decequiv%to) + realequiv;
+            if (decequiv%to < 10) {
+                realequiv = Integer.toString(decequiv%to) + realequiv;
+            } else {
+                char tempthing = (char)(decequiv%to + 87);
+                realequiv = tempthing + realequiv;
+            }
             decequiv /= to;
         }
         System.out.println(realequiv);
@@ -38,9 +31,32 @@ class ConvertNum {
 		genericInteger=Integer.parseInt(scan.next());
 		except=0;
 	    } catch (Exception e) { 
-		//stuff
+		// LOL no need to catch it.
 	    }
 	}
 	return genericInteger;
+    }
+
+    static int convertToDec (Scanner scan, String msg, int from, int to) {
+        int decequiv=0;
+        System.out.print(msg);
+        String conv=scan.next().toLowerCase();
+        String[] splitconv=conv.split("");
+        int[] revconv = new int[splitconv.length-1];
+        int j=0;
+        for (int i=splitconv.length-1;0<i;i--) {
+            int k=0;
+            try {
+                k = Integer.parseInt(splitconv[i]);
+            } catch (Exception e) {
+                k = (int)(splitconv[i].charAt(0)) - 87;
+            }
+            revconv[j] = k;
+            j++;
+        }
+        for (int i=0;i<revconv.length;i++) {
+            decequiv = decequiv + revconv[i]*(int)Math.pow(from,i);
+        }
+        return decequiv;
     }
 }
